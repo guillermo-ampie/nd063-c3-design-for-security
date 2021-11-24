@@ -48,10 +48,10 @@ Resources:
       GroupName: WebAppSG
       GroupDescription: "Security group for this application server"
       SecurityGroupEgress:
-      - IpProtocol: -1
+      - IpProtocol: "-1"
         CidrIp: 0.0.0.0/0
       SecurityGroupIngress:
-      - IpProtocol: -1
+      - IpProtocol: "-1"
         CidrIp: 0.0.0.0/0
       - IpProtocol: tcp
         FromPort: 22
@@ -101,7 +101,7 @@ Resources:
       GroupName: AppLoadBalancerSG
       GroupDescription: "Security group for this application server"
       SecurityGroupEgress:
-      - IpProtocol: -1
+      - IpProtocol: "-1"
         CidrIp: 0.0.0.0/0
       SecurityGroupIngress:
       - IpProtocol: tcp
@@ -154,7 +154,7 @@ Resources:
       GroupName: AttackInstanceSG
       GroupDescription: "Security group for the attack instance"
       SecurityGroupEgress:
-      - IpProtocol: -1
+      - IpProtocol: "-1"
         CidrIp: 0.0.0.0/0
       SecurityGroupIngress:
       - IpProtocol: tcp
