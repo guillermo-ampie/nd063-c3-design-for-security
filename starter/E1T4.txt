@@ -1,5 +1,20 @@
 Based on the architecture diagram, and the steps you have taken so far to upload data and access the application web service, identify at least 2 obvious poor practices as it relates to security.  Include justification.
 
 # Poor practice 1
+At server level:
+    - The "Web Service Instance" is located in the public subnet "PublicSubnetTrusted," exposing this server to the Internet, increasing the "attack surface" for the application: the server can be reached directly from the Internet using its public IP address like:
+
+    curl ApplicationInstanceIP:5000/free_recipe
+
+    The "Web Service Instance" should be located in a private subnet. 
+    Besides, the protocol used is HTTP when HTTPS is preferred because the latter encrypts the traffic to/from the HTTP server.
+
 
 # Poor practice 2
+    - The "Web Service Instance" is located in a public subnet, and SSH (TCP port 22) is allowed from 0.0.0.0/0. This configuration exposes the instance to the whole Internet through the SSH protocol. The use of SSH in a production environment is discouraged. If it cannot be avoided, it should be limited to a specific public subnet(like a.b.c.d/24) in the VPC, using a bastion host located in this public subnet but never allowed from any source from the Internet.
+
+    Likewise, access from 0.0.0.0/0 using TCP port 5000 is allowed, exposing the web API to the whole Internet. Any user can bypass the ELB, using the instance's public API to connect directly to the instance web server using its public IP address: 
+
+    curl ApplicationInstanceIP:5000/free_recipe
+
+    Connections with TCP port 5000 should be restricted to the subnet where the ELB is located
