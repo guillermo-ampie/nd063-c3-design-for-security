@@ -37,7 +37,7 @@ Bonus - provide recommendations on how to remediate the vulnerabilities.
 
 - At the network level: the whole Internet is allowed in the SG "WebAppSG" and "AttackInstanceSG", so we must restrict the origin networks to specific IP addresses or subnets:
   - WebAppSG: IpProtocol: "-1" with CidrIp: 0.0.0.0/0 should be deleted. This configuration is allowing access to ports with high risk like TCP/3389
-  - SSH(TCP port 22): the origin should be restricted to a specific IP address or subnet. Alternatively, we can set up a bastion host that is accessible only from a particular IP address, and the sg "WebAppSG" only allows connections from a public subnet from  the VPC (where the bastion host was configured)
+  - SSH(TCP port 22): the origin should be restricted to a specific IP address or subnet. Alternatively, we can set up a bastion host that is accessible only from a particular IP address and update the sg "WebAppSG" so it only allows connections from a public subnet from  the VPC (where the bastion host was configured)
   - Web App port (TCP port 5000): it should be restricted to the public subnet from the VPC where the ALB is created
   - As a general best practice: Restrict SSH connections or, even better, eliminate this access.
   - Security group "default": it allows all inbound and outbound traffic (from any source to any destination): we should delete all inbound/inbound rules. This configuration is an important safeguard because the "default" sg is our sg of last resort
