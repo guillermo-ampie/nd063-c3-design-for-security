@@ -1,3 +1,51 @@
 Research and analyze which of the vulnerabilities appear to be related to the code that was deployed for the environment in this project.
+From Security Hub, we have the following vulnerability findings:
+
+- From CIS AWS Foundations Benchmark v1.2.0:
+  - Level HIGH:
+    - Ensure no security groups allow ingress from 0.0.0.0/0 to port 22 related to "WebAppSG" and "AttackInstanceSG".
+    - Ensure the default security group of every VPC restricts all traffic: related to the SG "default", this is our SG of last resort if no SG is specified when creating the VPC.
+    - Ensure no security groups allow ingress from 0.0.0.0/0 to port 3389: related to SG "WebAppSG".
+
+- From AWS Foundational Security Best Practices v1.0.0:
+  - Level CRITICAL:
+    - Security groups should not allow unrestricted access to ports with high risk: related to SG "WebAppSG" and "AttackInstanceSG".
+  - Level HIGH:
+    - S3 Block Public Access setting should be enabled at the bucket-level: related three S3 buckets created in c3-s3.yml.
+    - Security groups should only allow unrestricted incoming traffic for authorized ports: related to SG "WebAppSG" and "AttackInstanceSG".
+    - The VPC default security group should not allow inbound and outbound traffic: related to SG "default".
+    - EC2 instances should use Instance Metadata Service Version 2 (IMDSv2): related to both instances created.
+    - EC2 instances should not have a public IPv4 address: related to both instances created. (We should move the "RecipeWebServiceInstance" server to a private subnet).
+  - Level MEDIUM:
+    - EC2 subnets should not automatically assign public IP addresses: related to our two public subnets
+    - S3 buckets should have server-side encryption enabled: related to the three S3 buckets created in c3-s3.yml
+    - S3 buckets should require requests to use Secure Socket Layer: related to the S3 buckets created in c3-s3.yml
+    - Attached EBS volumes should be encrypted at-rest: related to both instances created
+    - EC2 instances should be managed by AWS Systems Manager: related to both instances created
+    - Application load balancer should be configured to drop http headers: related to the ALB created
+    - Application and Classic Load Balancers logging should be enabled: related to ALB created
+    - Application Load Balancer should be configured to redirect all HTTP requests to HTTPS: related to ALB created
+
+
 
 Bonus - provide recommendations on how to remediate the vulnerabilities.
+- At the "RecipeWebServiceInstance" instance level: we should move this instance to a private subnet, so the instance does not have a public IP address. Therefore the instance will not be exposed to the Internet.
+
+- At the encryption level:
+  - Enable at least "server-side encryption" in all the S3 buckets
+  - Enable account-level encryption for EBS: this way, all EBS created for any EC2 instance will be encrypted at rest by default.
+
+- At the network level: the whole Internet is allowed in the SG "WebAppSG" and "AttackInstanceSG", so we must restrict the origin networks to specific IP addresses or subnets:
+  - WebAppSG: IpProtocol: "-1" with CidrIp: 0.0.0.0/0 should be deleted. This configuration is allowing access to ports with high risk like TCP/3389
+  - SSH(TCP port 22): the origin should be restricted to a specific IP address or subnet. Alternatively, we can set up a bastion host that is accessible only from a particular IP address, and the sg "WebAppSG" only allows connections from a public subnet from  the VPC (where the bastion host was configured)
+  - Web App port (TCP port 5000): it should be restricted to the public subnet from the VPC where the ALB is created
+  - As a general best practice: Restrict SSH connections or, even better, eliminate this access.
+  - Security group "default": it allows all inbound and outbound traffic (from any source to any destination): we should delete all inbound/inbound rules. This configuration is an important safeguard because the "default" sg is our sg of last resort
+
+- At the S3 policies level:
+  - Enable "S3 Block Public Access" in the S3 buckets and use IAM roles on the IAM users/instance profiles that need to access these S3 buckets
+  - The "InstanceRolePolicy-C3" policy can access any bucket in the account; we should restrict this to only the S3 buckets that the application needs to access. Also, the policy allows any action over the S3 buckets; we should specify only the actions that the app(EC2 instance) needs to perform over the S3 buckets.
+
+- On the ALB:
+  - Enable " drop http headers": if the ALB drops invalid headers values, "HTTP desync" attacks are prevented. 
+  - Enable "logging": logging will give us traceability on the ALB activity/use.
