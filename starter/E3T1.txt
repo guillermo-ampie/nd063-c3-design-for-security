@@ -1,3 +1,17 @@
 # Describe GuardDuty findings that were detected related to the brute force attack
+  GuardDuty shows two "findings" called "UnauthorizedAccess:EC2/SSHBruteForce":
+  - The first "finding" with severity HIGH shows this description: 
+    - "i-06c03c46b6ab7081e is performing SSH brute force attacks against 10.192.10.242. Brute force attacks are used to gain unauthorized access to your instance by guessing the SSH password."
+    - The instance "i-06c03c46b6ab7081e" is the "Attack Instance - C3" and the instance with IP address "10.192.10.242" is the target, the "Web Service Instance - C3"
+    - This "finding" gives detailed info about  the "attacker"
+
+  - The second "finding" with severity LOW shows this description:
+    - "10.192.11.243 is performing SSH brute force attacks against i-00fee7b69e851d0c7. Brute force attacks are used to gain unauthorized access to your instance by guessing the SSH password."
+    - The instance with IP address "10.192.11.243" is the attacker instance, and the instance with instance id: "i-00fee7b69e851d0c7" is the "Web Service Instance - C3"
+    - This finding gives detailed info about the "target" of the attack
+
 
 # Research the AWS Guard Duty documentation page and explain how GuardDuty may have detected this attack - i.e. what was its source of information.
+  Amazon GuardDuty has several "data sources"; one of them is "VPC Flow Logs," these logs record information about the traffic in and out on the EC2's network interfaces in the VPC. When Amazon GuardDuty is enabled, it automatically starts to analyze the VPC Flow logs data:
+  - The attempted ssh connections initiated by the "hydra" command will be registered in the VPC Flow logs. 
+  - VPC Flow logs are configured in c3-vpc.yml and are stored in the S3 bucket "cand-c3-vpc-flow-logs-*"
