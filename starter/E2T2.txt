@@ -29,11 +29,11 @@ From Security Hub, we have the following vulnerability findings:
 
 
 Bonus - provide recommendations on how to remediate the vulnerabilities.
-- At the "RecipeWebServiceInstance" instance level: we should move this instance to a private subnet, so the instance does not have a public IP address. Therefore the instance will not be exposed to the Internet.
+- At the "RecipeWebServiceInstance" instance level: we should move this instance to a private subnet so the instance does not have a public IP address. Therefore the instance will not be exposed to the Internet.
 
 - At the encryption level:
   - Enable at least "server-side encryption" in all the S3 buckets
-  - Enable account-level encryption for EBS: this way, all EBS created for any EC2 instance will be encrypted at rest by default.
+  - Enable account-level encryption for EBS: this way; all the EBS created for any EC2 instance will be encrypted at rest by default.
 
 - At the network level: the whole Internet is allowed in the SG "WebAppSG" and "AttackInstanceSG", so we must restrict the origin networks to specific IP addresses or subnets:
   - WebAppSG: IpProtocol: "-1" with CidrIp: 0.0.0.0/0 should be deleted. This configuration is allowing access to ports with high risk like TCP/3389
