@@ -1,8 +1,20 @@
 
 # What additional architectural change can be made to reduce the internet facing attack surface of the web application instance.
 
+1.- We could move the "RecipeWebServiceInstance" to a private subnet. This way, there is no direct access from the Internet to the instance (the instance does not have a public IP address in this case).
+2.- As a best practice, production servers should not have SSH enabled, so we should also remove the SSH access to this instance: remove the "KeyName" property in the "RecipeWebServiceInstance" and the EIP from the configuration in the CloudFormation template. 
+
+
 # Assuming the IAM permissions for the S3 bucket are still insecure, would creating VPC private endpoints for S3 prevent the unauthorized access to the secrets bucket.
 
+No, it would not. If we use the secret recipe bucket's public DNS name(accessed through the Internet Gateway in the VPC) or VPC endpoints for S3(a "private" connection without using the public Internet), in either case, we will reach the "secret" recipes bucket. 
+
+The problem is not how we access the "secret" recipes bucket; the problem is that the "insecure" IAM permissions(the "InstanceRolePolicy-C3" policy from the IAM Role) allows any action in any bucket. So even using VPC endpoints for S3 with the "insecure" IAM permission, we would read/write from the secrets recipe bucket.
+
+
 # Will applying default encryption setting to the s3 buckets encrypt the data that already exists?
+No, it will not; when we enable default encryption to a bucket, this setting does not affect the objects already stored in the bucket; AWS will only encrypt new objects that we put in the bucket after enabling server-side encryption. 
 
 # What would happen if the original cloud formation templates are applied to this environment.
+If we apply the original CloudFormation Templates, CloudFormation will configure what the template says to configure the infrastructure as before all the hardening tasks. Simply put, we would be losing all the changes(hardening) done in Exercise-4 through the console.
+
