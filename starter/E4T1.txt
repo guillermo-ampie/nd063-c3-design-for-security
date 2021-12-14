@@ -1,11 +1,16 @@
 
 
 # Identify 2-3 changes that can be made to our environment to prevent an ssh brute force attack from the internet.
-  1.- Allow SSH only from a specific subnet or the IP address of the operator/developer's machine that needs to access the "Web Service Instance": we need to update the SG "WebAppSG" for this. Important to disable "PasswordAuthentication" in the SSH config as depicted in Task2 from Exercise-4.
+
+  1.- Allow SSH only from a specific subnet or the single IP address of the operator/developer's machine that needs to access the "Web Service Instance": we need to update the SG "WebAppSG" for this. Important to disable "PasswordAuthentication" in the SSH config.
+  
   2.- Move the web instance to a private subnet and allow ssh only from the public subnets in the VPC through a bastion host.
-  3.- (Besides action in item 2)As a best practice, production servers should not have SSH enabled; as an additional measure, we should delete the SSH access to this instance: no key-pair used when launching the instance and deleting the SSH config(TCP port 22 from 0.0.0.0/0) in the SG "WebAppSG." 
+
+  3.- As a best practice, production servers should not have SSH enabled, so we should delete the SSH access to this instance: no key-pair used when launching the instance and deleting the SSH config(TCP port 22 from 0.0.0.0/0) in the SG "WebAppSG." 
     
+
 # Neither instance should have had access to the secret recipes bucket, in the even that instance   API credentials were compromised how could we have prevented access to sensitive data.
+
   - Applying the "Least Privilege Principle", we should have established a more restrictive  "InstanceRolePolicy-C3" policy (from c3-app.yml): this policy in the starter code allows any action in any S3 bucket, i.e., it is too permissive. We could restrict the policy to: 
     - Only the "actions" needed to execute the task; we could assume the instances only need to -read- from the free recipes bucket
     - Restrict the policy to only act on the S3 bucket "cand-c3-free-recipes-*" and no other bucket more. This way, neither of the two instances could read from the secret recipes bucket
