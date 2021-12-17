@@ -2,4 +2,4 @@
 
 1.- The " RecipeWebServiceInstance" is deployed in a private subnet, and it does not use any KeyPair; access to the SSH port (TCP/22) in the SG was removed. 
 2.- The EBS disks used in the instances are encrypted at rest.
-3.- Public access to the S3 buckets was blocked. The original c3-s3.yml file does not have public access blocked on the S3 buckets, so an object can be made public and accessed through its public DNS name. Making the secret_recipe.txt public will bypass the policy "InstanceRolePolicy-C3" making the file accessible from everywhere
+3.- Public access to the S3 buckets was blocked. The original c3-s3.yml file does not have public access blocked on the S3 buckets, so an object can be made public and accessed through its public DNS name. Making the secret_recipe.txt file public will bypass the policy "InstanceRolePolicy-C3" making the file accessible from everywhere
