@@ -2,10 +2,10 @@ Description:  This template deploys ec2 instances for the project starter
 
 Parameters:
   AmiIdRecipeWebServiceInstance:
-    Type: String
+    Type: AWS::EC2::Image::Id
     Default: "ami-0964e67a489e13cdb"
   AmiIdAttackInstance:
-    Type: String
+    Type: AWS::EC2::Image::Id
     Default: "ami-01fcf79ce78f46764"
   KeyPair:
     Type: String
