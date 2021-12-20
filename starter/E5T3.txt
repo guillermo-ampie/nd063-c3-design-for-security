@@ -1,0 +1,79 @@
+### Regula on starter CloudFormation templates:
+  Regula identified 11 problems in the starter CloudFormation Templates.
+===============================================
+[amp (main) nd063-c3-design-for-security] regula run starter/c3-s3.yml starter/c3-vpc.yml starter/c3-app.yml 
+
+FG_R00085: VPC security group rules should not permit ingress from '0.0.0.0/0' to TCP/UDP port 22 (SSH) [High]
+           https://docs.fugue.co/FG_R00085.html
+
+  [1]: AttackInstanceSG
+       in starter/c3-app.yml:151:3
+
+  [2]: WebAppSG
+       in starter/c3-app.yml:45:3
+
+FG_R00099: S3 bucket server side encryption should be enabled [High]
+           https://docs.fugue.co/FG_R00099.html
+
+  [1]: S3BucketRecipesFree
+       in starter/c3-s3.yml:4:3
+
+  [2]: S3BucketRecipesSecret
+       in starter/c3-s3.yml:8:3
+
+  [3]: S3BucketVPCFlowLogs
+       in starter/c3-s3.yml:12:3
+
+FG_R00229: S3 buckets should have all `block public access` options enabled [High]
+           https://docs.fugue.co/FG_R00229.html
+
+  [1]: S3BucketRecipesFree
+       in starter/c3-s3.yml:4:3
+
+  [2]: S3BucketRecipesSecret
+       in starter/c3-s3.yml:8:3
+
+  [3]: S3BucketVPCFlowLogs
+       in starter/c3-s3.yml:12:3
+
+FG_R00100: S3 bucket policies should only allow requests that use HTTPS [Medium]
+           https://docs.fugue.co/FG_R00100.html
+
+  [1]: S3BucketRecipesFree
+       in starter/c3-s3.yml:4:3
+
+  [2]: S3BucketRecipesSecret
+       in starter/c3-s3.yml:8:3
+
+  [3]: S3BucketVPCFlowLogs
+       in starter/c3-s3.yml:12:3
+
+Found 11 problems.
+[amp (main) nd063-c3-design-for-security] 
+===============================================
+
+### Regula on hardened CloudFormation templates: After applying the hardened tasks on Exercise 5 over the CloudFormation templates, the vulnerabilities went from eleven to only 4
+===============================================
+[amp (main) nd063-c3-design-for-security] regula run starter/c3-s3_solution.yml starter/c3-vpc.yml starter/c3-app_solution.yml 
+
+# This vulnerability is related to the attack instance that was not hardened
+FG_R00085: VPC security group rules should not permit ingress from '0.0.0.0/0' to TCP/UDP port 22 (SSH) [High]
+           https://docs.fugue.co/FG_R00085.html
+
+  [1]: AttackInstanceSG
+       in starter/c3-app_solution.yml:145:3
+
+FG_R00100: S3 bucket policies should only allow requests that use HTTPS [Medium]
+           https://docs.fugue.co/FG_R00100.html
+
+  [1]: S3BucketRecipesFree
+       in starter/c3-s3_solution.yml:4:3
+
+  [2]: S3BucketRecipesSecret
+       in starter/c3-s3_solution.yml:19:3
+
+  [3]: S3BucketVPCFlowLogs
+       in starter/c3-s3_solution.yml:33:3
+
+Found 4 problems.
+=============================================
