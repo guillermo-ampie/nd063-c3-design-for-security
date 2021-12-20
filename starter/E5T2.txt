@@ -38,7 +38,7 @@ apt                1.4.9                  1.4.11                 CVE-2020-27350 
 
 
 ### Example vulnerability
-#### securityhub-mfa-enabled-for-iam-console-access-e55b6fb7
+securityhub-mfa-enabled-for-iam-console-access-e55b6fb7
 - Description: Checks whether AWS Multi-Factor Authentication (MFA) is enabled for all AWS Identity and Access Management (IAM) users that use a console password.
 - Resources in scope
   - ID: cand-c3-iam-user
