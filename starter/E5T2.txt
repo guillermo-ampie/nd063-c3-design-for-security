@@ -36,7 +36,6 @@ apt                1.4.9                  1.4.11                 CVE-2020-27350 
 - Description(from official website): AWS Config is a service that enables you to assess, audit, and evaluate the configurations of your AWS resources. Config continuously monitors and records your AWS resource configurations and allows you to automate the evaluation of recorded configurations against desired configurations. With Config, you can review changes in configurations and relationships between AWS resources, dive into detailed resource configuration histories, and determine your overall compliance against the configurations specified in your internal guidelines.
 
 
-
 ### Example vulnerability
 securityhub-mfa-enabled-for-iam-console-access-e55b6fb7
 - Description: Checks whether AWS Multi-Factor Authentication (MFA) is enabled for all AWS Identity and Access Management (IAM) users that use a console password.
